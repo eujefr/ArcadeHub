@@ -59,6 +59,266 @@
         </footer>
     </div>
 
-    <script src="script.js"></script>
+    	<script>
+		
+		document.addEventListener("DOMContentLoaded", function () {
+    const container = document.getElementById("snake-container");
+    const segmentCount = 25;
+    const segmentSpacing = 15;
+    const segments = [];
+    let lastMousePos = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
+    let inertia = { x: 0, y: 0 };
+    let moving = false;
+
+    for (let i = 0; i < segmentCount; i++) {
+        let segment = document.createElement("div");
+        segment.classList.add(i === 0 ? "snake-head" : "snake-segment");
+
+        if (i === 0) {
+            let tongue = document.createElement("div");
+            tongue.classList.add("snake-tongue");
+            segment.appendChild(tongue);
+        }
+
+        container.appendChild(segment);
+        segments.push(segment);
+    }
+
+    let positions = [];
+    for (let i = 0; i < segmentCount; i++) {
+        positions.push({
+            x: lastMousePos.x - i * segmentSpacing,
+            y: lastMousePos.y,
+        });
+    }
+
+    document.addEventListener("mousemove", function (event) {
+        lastMousePos = { x: event.clientX, y: event.clientY };
+        moving = true;
+    });
+
+    function updateSnake() {
+        if (moving) {
+            inertia.x = (lastMousePos.x - positions[0].x) * 0.15;
+            inertia.y = (lastMousePos.y - positions[0].y) * 0.15;
+        }
+
+        let newHeadPos = {
+            x: positions[0].x + inertia.x,
+            y: positions[0].y + inertia.y,
+        };
+        positions.unshift(newHeadPos);
+        positions.pop();
+
+        for (let i = 1; i < segmentCount; i++) {
+            let dx = positions[i - 1].x - positions[i].x;
+            let dy = positions[i - 1].y - positions[i].y;
+            let distance = Math.sqrt(dx * dx + dy * dy);
+
+            if (distance > segmentSpacing) {
+                let angle = Math.atan2(dy, dx);
+                positions[i].x = positions[i - 1].x - Math.cos(angle) * segmentSpacing;
+                positions[i].y = positions[i - 1].y - Math.sin(angle) * segmentSpacing;
+            }
+        }
+
+        for (let i = 0; i < segmentCount; i++) {
+            let segment = segments[i];
+            let pos = positions[i];
+
+            segment.style.transform = `translate(${pos.x}px, ${pos.y}px)`;
+        }
+
+        
+        if (!moving) {
+            inertia.x *= 0.95;
+            inertia.y *= 0.95;
+
+            if (Math.abs(inertia.x) < 0.1 && Math.abs(inertia.y) < 0.1) {
+                moving = false;
+                // Pequeno deslocamento para evitar que ela fique muito enrolada
+                positions[0].x += Math.sin(Date.now() * 0.002) * 1.5;
+                positions[0].y += Math.cos(Date.now() * 0.002) * 1.5;
+            }
+        }
+
+        requestAnimationFrame(updateSnake);
+    }
+
+    updateSnake();
+});
+
+
+
+
+	</script>
+
+	<style>
+
+		@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
+body {
+    background: radial-gradient(circle, #020024 0%, #028585 40%, #00fff2 100%);
+    color: #fff;
+    font-family: 'Press Start 2P', cursive;
+    text-align: center;
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+header {
+    animation: neonGlow 1.5s infinite alternate;
+}
+
+h1 {
+    font-size: 2rem;
+    text-shadow: 0 0 8px #00fff2, 0 0 20px #028585;
+}
+
+.logo {
+    width: 150px;
+    height: auto;
+    animation: pulse 2s infinite;
+}
+
+.button {
+    display: inline-block;
+    margin-top: 20px;
+    padding: 15px 25px;
+    background: linear-gradient(45deg, #028585, #00fff2);
+    color: #000;
+    text-decoration: none;
+    border-radius: 5px;
+    font-size: 1rem;
+    box-shadow: 0 0 10px #00fff2;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.button:hover {
+    transform: scale(1.1);
+    box-shadow: 0 0 20px #00fff2;
+}
+
+footer {
+    margin-top: 50px;
+    font-size: 0.8rem;
+    text-shadow: 0 0 5px #00fff2;
+}
+
+.planos {
+    margin-top: 50px;
+}
+
+.grid {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap;
+    margin-top: 20px;
+}
+
+.card {
+    background-color: rgba(2, 133, 133, 0.8);
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0px 0px 15px #00fff2;
+    text-align: center;
+    width: 200px;
+    transition: transform 0.3s;
+}
+
+.card:hover {
+    transform: scale(1.1);
+    box-shadow: 0px 0px 25px #00fff2;
+}
+
+h2 {
+    text-shadow: 0px 0px 8px #00fff2;
+}
+
+@keyframes neonGlow {
+    from { text-shadow: 0 0 5px #00fff2; }
+    to { text-shadow: 0 0 15px #00fff2, 0 0 30px #028585; }
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+    100% { transform: scale(1); }
+}
+
+.snake {
+    position: absolute;
+    width: 32px;
+    height: 32px;
+    background-image: url('https://i.imgur.com/ZC8w0Kq.png'); /* Nova cobrinha pixel art */
+    background-size: cover;
+    pointer-events: none;
+    filter: drop-shadow(0px 0px 10px #00fff2);
+}
+
+#snake-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    pointer-events: none;
+}
+
+.snake-segment {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    background: linear-gradient(45deg, #00fff2, #028585);
+    border-radius: 50%;
+    box-shadow: 0 0 10px #00fff2;
+    transition: transform 0.1s ease-out;
+}
+
+.snake-head {
+    position: absolute;
+    width: 24px;
+    height: 24px;
+    background: linear-gradient(45deg, #00fff2, #028585);
+    border-radius: 50%;
+    box-shadow: 0 0 15px #00fff2;
+}
+
+.snake-head::before, .snake-head::after {
+    content: "";
+    position: absolute;
+    width: 6px;
+    height: 6px;
+    background: white;
+    border-radius: 50%;
+    top: 5px;
+}
+
+.snake-head::before { left: 5px; }
+.snake-head::after { right: 5px; }
+
+.snake-tongue {
+    position: absolute;
+    width: 10px;
+    height: 4px;
+    background: red;
+    border-radius: 2px;
+    bottom: -4px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+		
+	</style>
 </body>
 </html>
