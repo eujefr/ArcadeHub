@@ -1,0 +1,162 @@
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
+body {
+    background: radial-gradient(circle, #020024 0%, #028585 40%, #00fff2 100%);
+    color: #fff;
+    font-family: 'Press Start 2P', cursive;
+    text-align: center;
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+header {
+    animation: neonGlow 1.5s infinite alternate;
+}
+
+h1 {
+    font-size: 2rem;
+    text-shadow: 0 0 8px #00fff2, 0 0 20px #028585;
+}
+
+.logo {
+    width: 150px;
+    height: auto;
+    animation: pulse 2s infinite;
+}
+
+.button {
+    display: inline-block;
+    margin-top: 20px;
+    padding: 15px 25px;
+    background: linear-gradient(45deg, #028585, #00fff2);
+    color: #000;
+    text-decoration: none;
+    border-radius: 5px;
+    font-size: 1rem;
+    box-shadow: 0 0 10px #00fff2;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.button:hover {
+    transform: scale(1.1);
+    box-shadow: 0 0 20px #00fff2;
+}
+
+footer {
+    margin-top: 50px;
+    font-size: 0.8rem;
+    text-shadow: 0 0 5px #00fff2;
+}
+
+.planos {
+    margin-top: 50px;
+}
+
+.grid {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap;
+    margin-top: 20px;
+}
+
+.card {
+    background-color: rgba(2, 133, 133, 0.8);
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0px 0px 15px #00fff2;
+    text-align: center;
+    width: 200px;
+    transition: transform 0.3s;
+}
+
+.card:hover {
+    transform: scale(1.1);
+    box-shadow: 0px 0px 25px #00fff2;
+}
+
+h2 {
+    text-shadow: 0px 0px 8px #00fff2;
+}
+
+@keyframes neonGlow {
+    from { text-shadow: 0 0 5px #00fff2; }
+    to { text-shadow: 0 0 15px #00fff2, 0 0 30px #028585; }
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+    100% { transform: scale(1); }
+}
+
+.snake {
+    position: absolute;
+    width: 32px;
+    height: 32px;
+    background-image: url('https://i.imgur.com/ZC8w0Kq.png'); /* Nova cobrinha pixel art */
+    background-size: cover;
+    pointer-events: none;
+    filter: drop-shadow(0px 0px 10px #00fff2);
+}
+
+#snake-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    pointer-events: none;
+}
+
+.snake-segment {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    background: linear-gradient(45deg, #00fff2, #028585);
+    border-radius: 50%;
+    box-shadow: 0 0 10px #00fff2;
+    transition: transform 0.1s ease-out;
+}
+
+.snake-head {
+    position: absolute;
+    width: 24px;
+    height: 24px;
+    background: linear-gradient(45deg, #00fff2, #028585);
+    border-radius: 50%;
+    box-shadow: 0 0 15px #00fff2;
+}
+
+.snake-head::before, .snake-head::after {
+    content: "";
+    position: absolute;
+    width: 6px;
+    height: 6px;
+    background: white;
+    border-radius: 50%;
+    top: 5px;
+}
+
+.snake-head::before { left: 5px; }
+.snake-head::after { right: 5px; }
+
+.snake-tongue {
+    position: absolute;
+    width: 10px;
+    height: 4px;
+    background: red;
+    border-radius: 2px;
+    bottom: -4px;
+    left: 50%;
+    transform: translateX(-50%);
+}
